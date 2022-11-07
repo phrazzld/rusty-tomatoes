@@ -4,7 +4,9 @@ mod models;
 mod schema;
 
 use self::models::*;
-use args::{CreateMovie, EntityType, MovieCommand, MovieSubcommand, RustyTomatoesArgs};
+use args::{
+    CreateMovie, DeleteMovie, EntityType, MovieCommand, MovieSubcommand, RustyTomatoesArgs,
+};
 use clap::Parser;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
@@ -20,6 +22,7 @@ fn main() {
 pub fn handle_movie_command(movie: MovieCommand) {
     match movie.command {
         MovieSubcommand::Create(movie) => handle_create_movie(movie),
+        MovieSubcommand::Delete(movie) => handle_delete_movie(movie),
         MovieSubcommand::Show => handle_show_movies(),
     }
 }
@@ -34,12 +37,26 @@ pub fn handle_show_movies() {
         .for_each(|movie| println!("id: {:?} || title: {:?}", movie.id, movie.title));
 }
 
+pub fn handle_delete_movie(movie: DeleteMovie) {
+    let connection = &mut db::establish_connection();
+
+    let movie = schema::movies::table
+        .find(movie.id)
+        .first::<Movie>(connection)
+        .expect("Error loading movie");
+    println!("Deleting movie with id {}: \"{}\"", movie.id, movie.title);
+
+    diesel::delete(schema::movies::table.find(movie.id))
+        .execute(connection)
+        .expect("Error deleting movie");
+}
+
 pub fn handle_create_movie(movie: CreateMovie) {
     let connection = &mut db::establish_connection();
     create_movie(connection, &movie.title);
 }
 
-pub fn create_movie(conn: &mut SqliteConnection, title: &str) -> Movie {
+pub fn create_movie(conn: &mut SqliteConnection, title: &str) {
     use schema::movies;
 
     let new_movie = NewMovie { title };
@@ -49,5 +66,5 @@ pub fn create_movie(conn: &mut SqliteConnection, title: &str) -> Movie {
         .execute(conn)
         .expect("Error saving new movie");
 
-    movies::table.order(movies::id.desc()).first(conn).unwrap()
+    println!("Successfully created movie: \"{}\"", title);
 }

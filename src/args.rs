@@ -23,12 +23,12 @@ pub struct MovieCommand {
 pub enum MovieSubcommand {
     /// Create a new movie
     Create(CreateMovie),
+
     // /// Update an existing movie
     // Update(UpdateMovie),
-    //
-    // /// Delete an existing movie
-    // Delete(DeleteMovie),
-    //
+    /// Delete an existing movie
+    Delete(DeleteMovie),
+
     /// Show all movies
     Show,
 }
@@ -37,4 +37,10 @@ pub enum MovieSubcommand {
 pub struct CreateMovie {
     /// The title of the movie
     pub title: String,
+}
+
+#[derive(Debug, Args)]
+pub struct DeleteMovie {
+    /// The id of the movie to delete
+    pub id: i32,
 }
