@@ -1,12 +1,8 @@
-use clap:: {
-    Args,
-    Parser,
-    Subcommand
-};
+use clap::{Args, Parser, Subcommand};
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about)]
-pub struct MediaJournalArgs {
+pub struct RustyTomatoesArgs {
     #[clap(subcommand)]
     pub entity_type: EntityType,
 }
@@ -27,15 +23,14 @@ pub struct MovieCommand {
 pub enum MovieSubcommand {
     /// Create a new movie
     Create(CreateMovie),
-
     // /// Update an existing movie
     // Update(UpdateMovie),
     //
     // /// Delete an existing movie
     // Delete(DeleteMovie),
     //
-    // /// Show all movies
-    // Show(ShowMovies),
+    /// Show all movies
+    Show,
 }
 
 #[derive(Debug, Args)]
