@@ -51,13 +51,13 @@ pub fn handle_delete_movie(movie: DeleteMovie) {
 
 pub fn handle_create_movie(movie: CreateMovie) {
     let connection = &mut db::establish_connection();
-    create_movie(connection, &movie.title);
+    create_movie(connection, &movie.title, &movie.watched_at);
 }
 
-pub fn create_movie(conn: &mut SqliteConnection, title: &str) {
+pub fn create_movie(conn: &mut SqliteConnection, title: &str, watched_at: &chrono::NaiveDateTime) {
     use schema::movies;
 
-    let new_movie = NewMovie { title };
+    let new_movie = NewMovie { title, watched_at };
 
     diesel::insert_into(movies::table)
         .values(&new_movie)
