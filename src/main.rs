@@ -32,9 +32,7 @@ pub fn handle_show_movies() {
     let results = schema::movies::table
         .load::<Movie>(connection)
         .expect("Error loading movies");
-    results
-        .iter()
-        .for_each(|movie| println!("id: {:?} || title: {:?}", movie.id, movie.title));
+    results.iter().for_each(|movie| println!("{}", movie));
 }
 
 pub fn handle_delete_movie(movie: DeleteMovie) {
@@ -44,7 +42,7 @@ pub fn handle_delete_movie(movie: DeleteMovie) {
         .find(movie.id)
         .first::<Movie>(connection)
         .expect("Error loading movie");
-    println!("Deleting movie with id {}: \"{}\"", movie.id, movie.title);
+    println!("Deleting movie: {}", movie);
 
     diesel::delete(schema::movies::table.find(movie.id))
         .execute(connection)

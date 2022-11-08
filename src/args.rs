@@ -24,8 +24,6 @@ pub enum MovieSubcommand {
     /// Create a new movie
     Create(CreateMovie),
 
-    // /// Update an existing movie
-    // Update(UpdateMovie),
     /// Delete an existing movie
     Delete(DeleteMovie),
 
