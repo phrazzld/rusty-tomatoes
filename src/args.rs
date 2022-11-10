@@ -35,8 +35,8 @@ pub enum MovieSubcommand {
 pub struct CreateMovie {
     /// The title of the movie
     pub title: String,
-    /// The date and time the movie was watched (YYYY-MM-DDTHH:MM:SS)
-    pub watched_at: chrono::NaiveDateTime,
+    /// The date the movie was watched (YYYY-MM-DD)
+    pub watched_at: String,
 }
 
 #[derive(Debug, Args)]

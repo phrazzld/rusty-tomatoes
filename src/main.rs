@@ -54,10 +54,17 @@ pub fn handle_create_movie(movie: CreateMovie) {
     create_movie(connection, &movie.title, &movie.watched_at);
 }
 
-pub fn create_movie(conn: &mut SqliteConnection, title: &str, watched_at: &chrono::NaiveDateTime) {
+pub fn create_movie(conn: &mut SqliteConnection, title: &str, watched_at: &str) {
     use schema::movies;
 
-    let new_movie = NewMovie { title, watched_at };
+    let new_movie = NewMovie {
+        title,
+        watched_at: &chrono::NaiveDateTime::parse_from_str(
+            &(watched_at.to_owned() + " 00:00:00".clone()),
+            "%Y-%m-%d %H:%M:%S",
+        )
+        .unwrap(),
+    };
 
     diesel::insert_into(movies::table)
         .values(&new_movie)
